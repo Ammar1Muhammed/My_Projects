@@ -1,0 +1,461 @@
+
+from typing import List, Dict, Optional
+from dataclasses import dataclass
+from enum import Enum
+
+
+class Section(Enum):
+    """Enum representing different store sections."""
+    MEN = "men"
+    WOMEN = "women"
+
+
+class Action(Enum):
+    """Enum representing user actions in the application."""
+    RETURN = 1
+    EXIT = 2
+
+
+@dataclass
+class Product:
+    """Data class representing a product in the store."""
+    name: str
+    original_price: float
+    discounted_price: Optional[float] = None
+    
+    def __post_init__(self):
+        """Calculate discounted price if original price is provided."""
+        if self.discounted_price is None:
+            self.discounted_price = self.original_price
+    
+    def get_display_price(self) -> str:
+        """Get formatted price string for display."""
+        if self.discounted_price < self.original_price:
+            return f"${self.discounted_price:.2f} (Discounted from ${self.original_price:.2f})"
+        return f"${self.original_price:.2f}"
+    
+    def get_cart_price(self) -> float:
+        """Get price for cart calculation."""
+        return self.discounted_price
+
+
+class StoreConfig:
+    """Configuration class for store products and settings."""
+    
+    MEN_PRODUCTS: Dict[int, Product] = {
+        1: Product("Zara T-shirt", 50.0, 25.0),
+        2: Product("Levi's Jeans", 40.0),
+        3: Product("Nike Sneakers", 60.0, 30.0),
+    }
+    
+    WOMEN_PRODUCTS: Dict[int, Product] = {
+        1: Product("H&M Dress", 70.0),
+        2: Product("Adidas Running Shoes", 80.0, 40.0),
+        3: Product("Urban Outfitters Jacket", 90.0),
+    }
+    
+    RETURN_OPTION = 4
+    MIN_CHOICE = 1
+    MAX_CHOICE_MENU = 5
+    MAX_CHOICE_SECTION = 4
+
+
+class CartItem:
+    """Class representing an item in the shopping cart."""
+    
+    def __init__(self, product: Product, quantity: int = 1):
+        self.product = product
+        self.quantity = quantity
+    
+    @property
+    def total_price(self) -> float:
+        """Calculate total price for this cart item."""
+        return self.product.get_cart_price() * self.quantity
+    
+    def __str__(self) -> str:
+        """String representation of cart item."""
+        return f"{self.product.name} - ${self.product.get_cart_price():.2f} (Qty: {self.quantity})"
+    
+    def __repr__(self) -> str:
+        """Detailed string representation."""
+        return f"CartItem(product={self.product.name}, quantity={self.quantity}, total=${self.total_price:.2f})"
+
+
+class ShoppingCart:
+    """Class managing the shopping cart operations."""
+    
+    def __init__(self):
+        self._items: List[CartItem] = []
+    
+    def add_item(self, product: Product, quantity: int = 1) -> None:
+        """Add a product to the cart."""
+        # Check if product already exists in cart
+        for item in self._items:
+            if item.product.name == product.name:
+                item.quantity += quantity
+                return
+        
+        self._items.append(CartItem(product, quantity))
+    
+    def remove_item(self, product_name: str) -> bool:
+        """Remove a product from the cart by name."""
+        for i, item in enumerate(self._items):
+            if item.product.name.lower() == product_name.lower():
+                del self._items[i]
+                return True
+        return False
+    
+    def update_quantity(self, product_name: str, quantity: int) -> bool:
+        """Update the quantity of a product in the cart."""
+        if quantity <= 0:
+            return self.remove_item(product_name)
+        
+        for item in self._items:
+            if item.product.name.lower() == product_name.lower():
+                item.quantity = quantity
+                return True
+        return False
+    
+    @property
+    def is_empty(self) -> bool:
+        """Check if cart is empty."""
+        return len(self._items) == 0
+    
+    @property
+    def total(self) -> float:
+        """Calculate total price of all items in cart."""
+        return sum(item.total_price for item in self._items)
+    
+    @property
+    def item_count(self) -> int:
+        """Get total number of items in cart."""
+        return sum(item.quantity for item in self._items)
+    
+    def display_cart(self) -> str:
+        """Get formatted string representation of cart contents."""
+        if self.is_empty:
+            return "Your Cart is Empty"
+        
+        lines = []
+        for i, item in enumerate(self._items, 1):
+            lines.append(f"{i}. {item.product.name} - ${item.product.get_cart_price():.2f} x {item.quantity} = ${item.total_price:.2f}")
+        
+        lines.append("-" * 40)
+        lines.append(f"Total: ${self.total:.2f}")
+        lines.append(f"Total Items: {self.item_count}")
+        
+        return "\n".join(lines)
+    
+    def get_items(self) -> List[CartItem]:
+        """Get list of cart items."""
+        return self._items.copy()
+
+
+class StoreSection:
+    """Class representing a store section with products."""
+    
+    def __init__(self, name: str, products: Dict[int, Product]):
+        self.name = name
+        self.products = products
+    
+    def display_products(self) -> None:
+        """Display all products in this section."""
+        print(f"\n{'=' * 50}")
+        print(f"Welcome to {self.name} Section")
+        print("=" * 50)
+        
+        for number, product in self.products.items():
+            print(f"{number}. {product.name} - {product.get_display_price()}")
+        
+        print(f"{StoreConfig.RETURN_OPTION}. Return to Main Menu")
+        print("-" * 50)
+    
+    def get_product(self, choice: int) -> Optional[Product]:
+        """Get product by choice number."""
+        return self.products.get(choice)
+    
+    def get_return_choice(self) -> int:
+        """Get the return option number."""
+        return StoreConfig.RETURN_OPTION
+
+
+class Checkout:
+    """Class handling checkout operations."""
+    
+    def __init__(self, cart: ShoppingCart):
+        self.cart = cart
+    
+    def process_checkout(self) -> Dict[str, any]:
+        """Process checkout and return receipt information."""
+        if self.cart.is_empty:
+            return {"success": False, "message": "Cart is empty"}
+        
+        items = []
+        for cart_item in self.cart.get_items():
+            items.append({
+                "name": cart_item.product.name,
+                "quantity": cart_item.quantity,
+                "unit_price": cart_item.product.get_cart_price(),
+                "total": cart_item.total_price
+            })
+        
+        return {
+            "success": True,
+            "items": items,
+            "subtotal": self.cart.total,
+            "tax": self.cart.total * 0.08,  # 8% tax
+            "total": self.cart.total * 1.08
+        }
+    
+    def display_receipt(self, receipt: Dict[str, any]) -> None:
+        """Display formatted receipt."""
+        print("\n" + "=" * 50)
+        print("RECEIPT")
+        print("=" * 50)
+        
+        for item in receipt["items"]:
+            print(f"{item['name']}: ${item['unit_price']:.2f} x {item['quantity']} = ${item['total']:.2f}")
+        
+        print("-" * 50)
+        print(f"Subtotal: ${receipt['subtotal']:.2f}")
+        print(f"Tax (8%): ${receipt['tax']:.2f}")
+        print("=" * 50)
+        print(f"TOTAL: ${receipt['total']:.2f}")
+        print("=" * 50)
+    
+    def clear_cart(self) -> None:
+        """Clear the cart after successful checkout."""
+        # Cart will be cleared by the main application
+
+
+class InputValidator:
+    """Class for input validation utilities."""
+    
+    @staticmethod
+    def get_integer_input(prompt: str, min_value: int, max_value: int) -> Optional[int]:
+        """
+        Get validated integer input from user.
+        
+        Args:
+            prompt: Input prompt message
+            min_value: Minimum allowed value
+            max_value: Maximum allowed value
+            
+        Returns:
+            Validated integer or None if invalid
+        """
+        while True:
+            try:
+                value = int(input(prompt))
+                if min_value <= value <= max_value:
+                    return value
+                print(f"Please enter a number between {min_value} and {max_value}.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+    
+    @staticmethod
+    def get_yes_no_input(prompt: str) -> bool:
+        """Get yes/no input from user."""
+        while True:
+            response = input(prompt).lower().strip()
+            if response in ['y', 'yes']:
+                return True
+            elif response in ['n', 'no']:
+                return False
+            print("Please enter 'yes' or 'no'.")
+
+
+class ShoppingApp:
+    """Main application class for the shopping system."""
+    
+    def __init__(self):
+        self.cart = ShoppingCart()
+        self.men_section = StoreSection("Men", StoreConfig.MEN_PRODUCTS)
+        self.women_section = StoreSection("Women", StoreConfig.WOMEN_PRODUCTS)
+        self.checkout = Checkout(self.cart)
+        self.running = True
+    
+    def display_main_menu(self) -> None:
+        """Display the main menu options."""
+        print("\n" + "=" * 50)
+        print("MAIN MENU")
+        print("=" * 50)
+        print("1. Men Section")
+        print("2. Women Section")
+        print("3. View Cart")
+        print("4. Checkout")
+        print("5. Exit")
+        print("-" * 50)
+    
+    def handle_men_section(self) -> None:
+        """Handle men section operations."""
+        while True:
+            self.men_section.display_products()
+            choice = InputValidator.get_integer_input(
+                "Enter your choice: ",
+                StoreConfig.MIN_CHOICE,
+                StoreConfig.MAX_CHOICE_SECTION
+            )
+            
+            if choice == StoreConfig.RETURN_OPTION:
+                break
+            
+            product = self.men_section.get_product(choice)
+            if product:
+                self.cart.add_item(product)
+                print(f"\n✓ Added {product.name} to your cart!")
+                print(f"  Price: {product.get_display_price()}")
+            else:
+                print("\n✗ Invalid product choice.")
+    
+    def handle_women_section(self) -> None:
+        """Handle women section operations."""
+        while True:
+            self.women_section.display_products()
+            choice = InputValidator.get_integer_input(
+                "Enter your choice: ",
+                StoreConfig.MIN_CHOICE,
+                StoreConfig.MAX_CHOICE_SECTION
+            )
+            
+            if choice == StoreConfig.RETURN_OPTION:
+                break
+            
+            product = self.women_section.get_product(choice)
+            if product:
+                self.cart.add_item(product)
+                print(f"\n✓ Added {product.name} to your cart!")
+                print(f"  Price: {product.get_display_price()}")
+            else:
+                print("\n✗ Invalid product choice.")
+    
+    def handle_cart_view(self) -> None:
+        """Handle cart viewing operations."""
+        while True:
+            print("\n" + "=" * 50)
+            print("SHOPPING CART")
+            print("=" * 50)
+            print(self.cart.display_cart())
+            print("-" * 50)
+            print("1. Return to Main Menu")
+            print("2. Remove Item")
+            print("3. Update Quantity")
+            print("-" * 50)
+            
+            choice = InputValidator.get_integer_input(
+                "Enter your choice: ",
+                1,
+                3
+            )
+            
+            if choice == 1:
+                break
+            elif choice == 2:
+                self._handle_remove_item()
+            elif choice == 3:
+                self._handle_update_quantity()
+    
+    def _handle_remove_item(self) -> None:
+        """Handle removing an item from cart."""
+        if self.cart.is_empty:
+            print("\nCart is empty. Nothing to remove.")
+            return
+        
+        try:
+            item_num = int(input("Enter item number to remove: ")) - 1
+            items = self.cart.get_items()
+            
+            if 0 <= item_num < len(items):
+                removed_item = items[item_num]
+                self.cart.remove_item(removed_item.product.name)
+                print(f"\n✓ Removed {removed_item.product.name} from cart.")
+            else:
+                print("\n✗ Invalid item number.")
+        except ValueError:
+            print("\n✗ Invalid input. Please enter a number.")
+    
+    def _handle_update_quantity(self) -> None:
+        """Handle updating item quantity in cart."""
+        if self.cart.is_empty:
+            print("\nCart is empty. Nothing to update.")
+            return
+        
+        try:
+            item_num = int(input("Enter item number to update: ")) - 1
+            items = self.cart.get_items()
+            
+            if 0 <= item_num < len(items):
+                item = items[item_num]
+                new_quantity = int(input(f"Enter new quantity (current: {item.quantity}): "))
+                
+                if self.cart.update_quantity(item.product.name, new_quantity):
+                    print(f"\n✓ Updated {item.product.name} quantity to {new_quantity}.")
+                else:
+                    print("\n✗ Failed to update quantity.")
+            else:
+                print("\n✗ Invalid item number.")
+        except ValueError:
+            print("\n✗ Invalid input. Please enter a number.")
+    
+    def handle_checkout(self) -> None:
+        """Handle checkout process."""
+        if self.cart.is_empty:
+            print("\n✗ Your cart is empty. Add items before checkout.")
+            return
+        
+        print("\nProcessing checkout...")
+        receipt = self.checkout.process_checkout()
+        
+        if receipt["success"]:
+            self.checkout.display_receipt(receipt)
+            
+            print("\nProceed with payment?")
+            if InputValidator.get_yes_no_input("Confirm purchase (yes/no): "):
+                print("\n" + "=" * 50)
+                print("✓ Payment successful! Thank you for your purchase!")
+                print("=" * 50)
+                self.cart = ShoppingCart()  # Clear cart after successful purchase
+            else:
+                print("\nCheckout cancelled. Items remain in cart.")
+        else:
+            print(f"\n✗ Checkout failed: {receipt['message']}")
+    
+    def run(self) -> None:
+        """Main application loop."""
+        print("=" * 50)
+        print("WELCOME TO THE SHOPPING STORE")
+        print("=" * 50)
+        
+        while self.running:
+            self.display_main_menu()
+            
+            choice = InputValidator.get_integer_input(
+                "Enter your choice: ",
+                StoreConfig.MIN_CHOICE,
+                StoreConfig.MAX_CHOICE_MENU
+            )
+            
+            if choice == 1:
+                self.handle_men_section()
+            elif choice == 2:
+                self.handle_women_section()
+            elif choice == 3:
+                self.handle_cart_view()
+            elif choice == 4:
+                self.handle_checkout()
+            elif choice == 5:
+                print("\n" + "=" * 50)
+                print("Thank you for shopping with us!")
+                print("Goodbye! 👋")
+                print("=" * 50)
+                self.running = False
+
+
+def main():
+    """Main entry point for the application."""
+    app = ShoppingApp()
+    app.run()
+
+
+if __name__ == "__main__":
+    main()
