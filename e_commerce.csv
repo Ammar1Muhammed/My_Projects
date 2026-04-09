@@ -1,0 +1,51 @@
+order_id,customer_id,order_date,product_category,product_name,quantity,unit_price,discount_pct,payment_method,country,city,shipping_days,customer_segment,return_status
+1001,CU-201,2020-01-15,Electronics,Wireless Headphones,1,89.99,0.05,Credit Card,USA,New York,3,Premium,No
+1002,CU-156,2020-01-16,Clothing,Men's Jeans,2,45.50,0.15,PayPal,UK,London,5,Standard,Yes
+1003,CU-342,2020-01-18,Home & Kitchen,Blender,1,32.75,0.00,Debit Card,Canada,Toronto,7,Standard,No
+1004,CU-201,2020-02-02,Electronics,Smartphone,1,699.00,0.10,Credit Card,USA,New York,2,Premium,No
+1005,CU-499,2020-02-05,Books,Python Programming,3,24.99,0.20,PayPal,Australia,Sydney,10,Budget,No
+1006,CU-156,2020-02-15,Clothing,Women's Dress,1,55.25,0.25,Debit Card,UK,London,5,Standard,No
+1007,CU-755,2020-03-01,Home & Kitchen,Air Fryer,1,120.50,0.15,Credit Card,USA,Chicago,4,Premium,Yes
+1008,CU-342,2020-03-10,Electronics,Tablet,1,350.00,0.00,PayPal,Canada,Toronto,8,Standard,No
+1009,CU-201,2020-03-15,Books,Data Science Handbook,1,49.99,0.10,Credit Card,USA,New York,3,Premium,No
+1010,CU-802,2020-04-01,Clothing,Kids' T-shirt,4,15.99,0.30,Debit Card,Germany,Berlin,12,Budget,No
+1011,CU-755,2020-04-05,Electronics,Laptop,1,999.00,0.05,Credit Card,USA,Chicago,3,Premium,No
+1012,CU-156,2020-04-12,Home & Kitchen,Mixer,1,75.40,0.00,PayPal,UK,London,6,Standard,Yes
+1013,CU-201,2020-05-01,Electronics,Smart Watch,2,199.99,0.15,Credit Card,USA,New York,2,Premium,No
+1014,CU-802,2020-05-08,Books,AI Fundamentals,1,29.99,0.20,Debit Card,Germany,Berlin,9,Budget,No
+1015,CU-999,2020-05-20,Clothing,Women's Jacket,1,85.00,0.10,PayPal,France,Paris,7,Standard,No
+1016,CU-201,2020-06-03,Electronics,Wireless Earbuds,1,79.99,0.05,Credit Card,USA,New York,3,Premium,No
+1017,CU-156,2020-06-10,Home & Kitchen,Toaster,1,45.00,0.00,Debit Card,UK,London,5,Standard,No
+1018,CU-450,2020-06-15,Books,Machine Learning Basics,2,34.99,0.15,PayPal,Canada,Vancouver,8,Standard,No
+1019,CU-755,2020-07-01,Clothing,Men's Shirt,3,29.99,0.20,Credit Card,USA,Chicago,4,Premium,Yes
+1020,CU-342,2020-07-05,Electronics,Desktop Monitor,1,249.99,0.10,PayPal,Canada,Toronto,7,Standard,No
+1021,CU-201,2020-07-12,Home & Kitchen,Coffee Maker,1,89.99,0.00,Credit Card,USA,New York,2,Premium,No
+1022,CU-499,2020-08-01,Books,Statistics for Beginners,1,19.99,0.25,PayPal,Australia,Sydney,10,Budget,No
+1023,CU-156,2020-08-10,Clothing,Women's Blouse,2,35.50,0.15,Debit Card,UK,London,5,Standard,No
+1024,CU-802,2020-08-15,Electronics,Fitness Tracker,1,129.99,0.05,Debit Card,Germany,Berlin,6,Budget,No
+1025,CU-755,2020-09-01,Home & Kitchen,Vacuum Cleaner,1,199.99,0.10,Credit Card,USA,Chicago,4,Premium,No
+1026,CU-201,2020-09-10,Books,Deep Learning Advanced,1,59.99,0.00,Credit Card,USA,New York,3,Premium,No
+1027,CU-342,2020-09-15,Clothing,Men's Shorts,2,25.99,0.30,PayPal,Canada,Toronto,7,Standard,Yes
+1028,CU-999,2020-10-01,Electronics,Bluetooth Speaker,1,69.99,0.15,PayPal,France,Paris,7,Standard,No
+1029,CU-156,2020-10-10,Home & Kitchen,Microwave,1,150.00,0.00,Debit Card,UK,London,5,Standard,No
+1030,CU-201,2020-10-15,Books,Python for Data Analysis,2,44.99,0.20,Credit Card,USA,New York,2,Premium,No
+1031,CU-755,2020-11-01,Electronics,Gaming Console,1,499.99,0.05,Credit Card,USA,Chicago,3,Premium,No
+1032,CU-802,2020-11-10,Clothing,Kids' Jeans,3,22.99,0.25,Debit Card,Germany,Berlin,8,Budget,No
+1033,CU-342,2020-11-15,Home & Kitchen,Food Processor,1,89.99,0.10,PayPal,Canada,Toronto,7,Standard,No
+1034,CU-201,2020-12-01,Books,SQL Handbook,1,39.99,0.15,Credit Card,USA,New York,3,Premium,No
+1035,CU-156,2020-12-10,Electronics,External Hard Drive,1,129.99,0.00,Debit Card,UK,London,5,Standard,Yes
+1036,CU-499,2020-12-15,Clothing,Women's Sweater,1,65.00,0.20,PayPal,Australia,Sydney,9,Budget,No
+1037,CU-755,2021-01-01,Home & Kitchen,Slow Cooker,1,49.99,0.05,Credit Card,USA,Chicago,4,Premium,No
+1038,CU-201,2021-01-10,Books,R for Data Science,1,54.99,0.10,Credit Card,USA,New York,2,Premium,No
+1039,CU-342,2021-01-15,Electronics,4K TV,1,899.99,0.00,PayPal,Canada,Toronto,8,Standard,No
+1040,CU-156,2021-02-01,Clothing,Men's Coat,1,120.00,0.15,Debit Card,UK,London,5,Standard,No
+1041,CU-802,2021-02-10,Home & Kitchen,Blender,1,39.99,0.25,Debit Card,Germany,Berlin,7,Budget,No
+1042,CU-755,2021-02-15,Books,Computer Networks,1,49.99,0.00,Credit Card,USA,Chicago,4,Premium,No
+1043,CU-201,2021-03-01,Electronics,Smartphone,1,799.99,0.05,Credit Card,USA,New York,2,Premium,No
+1044,CU-342,2021-03-10,Clothing,Women's Skirt,2,30.99,0.30,PayPal,Canada,Toronto,7,Standard,Yes
+1045,CU-156,2021-03-15,Home & Kitchen,Air Fryer,1,110.00,0.10,Debit Card,UK,London,5,Standard,No
+1046,CU-499,2021-04-01,Books,Algorithms,1,29.99,0.20,PayPal,Australia,Sydney,10,Budget,No
+1047,CU-755,2021-04-10,Electronics,Tablet,1,399.99,0.15,Credit Card,USA,Chicago,3,Premium,No
+1048,CU-201,2021-04-15,Clothing,Kids' Hoodie,2,34.99,0.00,Credit Card,USA,New York,3,Premium,No
+1049,CU-802,2021-05-01,Home & Kitchen,Mixer,1,79.99,0.05,Debit Card,Germany,Berlin,6,Budget,No
+1050,CU-342,2021-05-10,Books,Blockchain Basics,1,49.99,0.10,PayPal,Canada,Toronto,8,Standard,No
